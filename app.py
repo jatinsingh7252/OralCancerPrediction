@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(page_title="Oral Cancer Prediction System")
 
 # Heading
-st.title("🩺 AI-Based Oral Cancer Prediction System")
+st.title("AI-Based Oral Cancer Prediction System")
 
 st.write("Enter patient details below")
 
