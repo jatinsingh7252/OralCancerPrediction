@@ -3,13 +3,8 @@ import streamlit as st
 # Page title
 st.set_page_config(page_title="Oral Cancer Prediction System")
 
-# Heading
-<<<<<<< HEAD
+# Headin
 st.title("AI-Based Oral Cancer Prediction System")
-=======
-st.title("🩺 AI-Based Oral Cancer Prediction System")
->>>>>>> de3bba5cfe9857bd2ef87985bf1e46edbc54aa2c
-
 st.write("Enter patient details below")
 
 # Input fields
