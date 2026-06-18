@@ -1,9 +1,16 @@
 import streamlit as st
+import joblib
+import pandas as pd
 
-# Page title
+# Load trained models
+diagnosis_model = joblib.load("models/diagnosis_model.pkl")
+stage_model = joblib.load("models/stage_model.pkl")
+survival_model = joblib.load("models/survival_model.pkl")
+
+# Page settings
 st.set_page_config(page_title="Oral Cancer Prediction System")
 
-# Headin
+# Title
 st.title("AI-Based Oral Cancer Prediction System")
 st.write("Enter patient details below")
 
@@ -38,32 +45,43 @@ betel = st.selectbox(
 # Predict button
 if st.button("Predict"):
 
-    risk_score = 0
-    if tobacco == "Yes":
-        risk_score += 1
-    if alcohol == "Yes":
-        risk_score += 1
-    if hpv == "Yes":
-        risk_score += 1
-    if betel == "Yes":
-        risk_score += 1
+    # Convert categorical values into numbers
+    gender_value = 1 if gender == "Male" else 0
+    tobacco_value = 1 if tobacco == "Yes" else 0
+    alcohol_value = 1 if alcohol == "Yes" else 0
+    hpv_value = 1 if hpv == "Yes" else 0
+    betel_value = 1 if betel == "Yes" else 0
 
-    # Prediction Logic
-    if risk_score >= 3:
-        diagnosis = "Positive"
-        stage = "Stage 2"
-        survival = "70%"
-    else:
-        diagnosis = "Negative"
-        stage = "Stage 0"
-        survival = "95%"
+    # Create input dataframe
+    input_data = pd.DataFrame({
+        "Age": [age],
+        "Gender": [gender_value],
+        "Tobacco Use": [tobacco_value],
+        "Alcohol Consumption": [alcohol_value],
+        "HPV Infection": [hpv_value],
+        "Betel Quid Use": [betel_value]
+    })
 
+    # Predictions
+    diagnosis_pred = diagnosis_model.predict(input_data)[0]
+    stage_pred = stage_model.predict(input_data)[0]
+    survival_pred = survival_model.predict(input_data)[0]
+
+    # Convert predictions to readable format
+    diagnosis = "Positive" if diagnosis_pred == 1 else "Negative"
+    stage = f"Stage {stage_pred}"
+    survival = f"{round(survival_pred, 2)}%"
+
+    # Display results
     st.success("Prediction Completed Successfully")
+
     st.markdown("---")
     st.header("Prediction Results")
+
     st.metric("Oral Cancer Diagnosis", diagnosis)
     st.metric("Cancer Stage", stage)
     st.metric("5-Year Survival Rate", survival)
+
     st.markdown("---")
     st.subheader("Health Suggestions")
 
@@ -86,6 +104,7 @@ st.markdown("---")
 st.warning(
     "This system is for educational purposes only and should not replace professional medical advice."
 )
+
 st.caption(
     "Developed by Jatin Singh | SRN: PES1PG25CA377 | PES University"
 )
