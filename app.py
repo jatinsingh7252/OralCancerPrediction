@@ -15,7 +15,7 @@ st.title("AI-Based Oral Cancer Prediction System")
 st.write("Enter patient details below")
 
 # Input fields
-age = st.number_input("Age", min_value=1, max_value=100)
+age = st.number_input("Age", min_value=18, max_value=100)
 
 gender = st.selectbox(
     "Gender",
